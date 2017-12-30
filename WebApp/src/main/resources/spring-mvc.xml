@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:mvc="http://www.springframework.org/schema/mvc"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:p="http://www.springframework.org/schema/p"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/mvc
+       http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+    <!-- 启动注解，注册服务，如验证框架、全局类型转换器 -->
+    <mvc:annotation-driven/>
+
+    <!-- 扫描controller（controller层注入） -->
+    <!--<context:component-scan base-package="cn.luo.*.controller" />-->
+    <!-- 启动自动扫描 -->
+    <context:component-scan base-package="cn.luo.*.controller">
+        <!-- 制定扫包规则，只扫描使用@Controller注解的Java类 -->
+        <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+    <mvc:annotation-driven>
+        <!-- 支持返回json(避免IE在ajax请求时，返回json出现下载 ) -->
+        <mvc:message-converters>
+            <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+                <property name="supportedMediaTypes">
+                    <list>
+                        <value>application/json;charset=UTF-8</value>
+                    </list>
+                </property>
+                <property name="objectMapper">
+                    <bean class="com.fasterxml.jackson.databind.ObjectMapper">
+                        <!-- 配置默认的json输出日期格式 -->
+                        <property name="dateFormat">
+                            <bean class="java.text.SimpleDateFormat">
+                                <constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+                            </bean>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </mvc:message-converters>
+    </mvc:annotation-driven>
+
+    <!-- 对静态资源文件的访问 -->
+    <mvc:resources mapping="/*" location="/resources/" cache-period="31556926" />
+
+    <!-- 配置视图解析器 -->
+    <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver"
+          p:prefix="/resources/views/"
+          p:suffix=".jsp"/>
+
+    <!--文件上传配置-->
+    <!--<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">-->
+        <!--&lt;!&ndash;默认编码&ndash;&gt;-->
+        <!--<property name="defaultEncoding" value="UTF-8"/>-->
+        <!--&lt;!&ndash;上传文件大小限制为31M,31*1024*1024&ndash;&gt;-->
+        <!--<property name="maxUploadSize" value="32505856"/>-->
+        <!--&lt;!&ndash;内存中最大值&ndash;&gt;-->
+        <!--<property name="maxInMemorySize" value="4096"/>-->
+    <!--</bean>-->
+
+</beans>

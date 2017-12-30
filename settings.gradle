@@ -1,3 +1,5 @@
 rootProject.name = 'GradleSSM'
 include 'CoreModel'
+include 'App'
+include 'WebApp'
 
